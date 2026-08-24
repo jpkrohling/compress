@@ -321,6 +321,13 @@ pos++`,
 	}
 
 	for i, t := range types {
+		if t == "*bytes.Buffer" {
+			// huffmanBytesBuffer is hand-written in inflate_bytesbuffer.go:
+			// a *bytes.Buffer exposes its unread input as a slice, enabling a
+			// 64-bit bit buffer with 8-byte refills that this byte-at-a-time
+			// template cannot express. Only the dispatch entry is generated.
+			continue
+		}
 		r := readByte
 		if t == "*bufio.Reader" {
 			r = peek
